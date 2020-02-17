@@ -3,7 +3,8 @@
     <template v-for="(field, fieldIndex) in vuetable.tableFields">
       <template v-if="field.visible">
         <template v-if="vuetable.isFieldComponent(field.name)">
-          <component :is="field.name"
+          <component
+            :is="field.name"
             :row-field="field"
             :is-header="true"
             :title="renderTitle(field)"
@@ -16,15 +17,17 @@
           ></component>
         </template>
         <template v-else-if="vuetable.isFieldSlot(field.name)">
-          <th :class="headerClass('vuetable-th-slot', field)"
-              :key="fieldIndex"
-              :style="{width: field.width}"
-              v-html="renderTitle(field)"
-              @click="onColumnHeaderClicked(field, $event)"
+          <th
+            :class="headerClass('vuetable-th-slot', field)"
+            :key="fieldIndex"
+            :style="{width: field.width}"
+            v-html="renderTitle(field)"
+            @click="onColumnHeaderClicked(field, $event)"
           ></th>
         </template>
         <template v-else>
-          <th @click="onColumnHeaderClicked(field, $event)"
+          <th
+            @click="onColumnHeaderClicked(field, $event)"
             :key="fieldIndex"
             :id="'_' + field.name"
             :class="headerClass('vuetable-th', field)"
@@ -34,90 +37,100 @@
         </template>
       </template>
     </template>
-    <vuetable-col-gutter v-if="vuetable.scrollVisible"/>
+    <vuetable-col-gutter v-if="vuetable.scrollVisible" />
   </tr>
 </template>
 <script>
-import VuetableFieldCheckbox from './VuetableFieldCheckbox'
-import VuetableFieldHandle from './VuetableFieldHandle'
-import VuetableFieldSequence from './VuetableFieldSequence'
-import VuetableColGutter from './VuetableColGutter'
+import VuetableFieldCheckbox from "./VuetableFieldCheckbox";
+import VuetableFieldHandle from "./VuetableFieldHandle";
+import VuetableFieldSequence from "./VuetableFieldSequence";
+import VuetableColGutter from "./VuetableColGutter";
 
 export default {
   components: {
-    'vuetable-field-checkbox': VuetableFieldCheckbox, 
-    'vuetable-field-handle'  : VuetableFieldHandle,
-    'vuetable-field-sequence': VuetableFieldSequence,
+    "vuetable-field-checkbox": VuetableFieldCheckbox,
+    "vuetable-field-handle": VuetableFieldHandle,
+    "vuetable-field-sequence": VuetableFieldSequence,
     VuetableColGutter
   },
 
   computed: {
     sortOrder() {
-      return this.$parent.sortOrder
+      return this.$parent.sortOrder;
     },
 
     css() {
-      return this.$parent.$_css
+      return this.$parent.$_css;
     },
 
     vuetable() {
-      return this.$parent
+      return this.$parent;
     }
   },
 
   methods: {
-    stripPrefix (name) {
-      return name.replace(this.vuetable.fieldPrefix, '')
+    stripPrefix(name) {
+      return name.replace(this.vuetable.fieldPrefix, "");
     },
 
-    headerClass (base, field) {
+    headerClass(base, field) {
       return [
-        base + '-' + this.toSnakeCase(field.name),
-        field.titleClass || '',
+        base + "-" + this.toSnakeCase(field.name),
+        field.titleClass || "",
         this.sortClass(field),
-        {'sortable': this.vuetable.isSortable(field)}
-      ]
+        { sortable: this.vuetable.isSortable(field) }
+      ];
     },
 
-    toSnakeCase (str) {
-      return typeof(str) === 'string' && str.replace(/([A-Z])/g, (chr) => "_"+chr.toLowerCase())
-        .replace(' ', '_')
-        .replace('.', '_')
+    toSnakeCase(str) {
+      return (
+        typeof str === "string" &&
+        str
+          .replace(/([A-Z])/g, chr => "_" + chr.toLowerCase())
+          .replace(" ", "_")
+          .replace(".", "_")
+      );
     },
 
-    sortClass (field) {
-      let cls = ''
-      let i = this.currentSortOrderPosition(field)
+    sortClass(field) {
+      let cls = "";
+      let i = this.currentSortOrderPosition(field);
 
       if (i !== false) {
-        cls = (this.sortOrder[i].direction == 'asc') ? this.css.ascendingClass : this.css.descendingClass
+        cls =
+          this.sortOrder[i].direction == "asc"
+            ? this.css.ascendingClass
+            : this.css.descendingClass;
       }
 
       return cls;
     },
 
-    sortIcon (field) {
-      let cls = this.css.sortableIcon
-      let i = this.currentSortOrderPosition(field)
+    sortIcon(field) {
+      let cls = this.css.sortableIcon;
+      let i = this.currentSortOrderPosition(field);
 
       if (i !== false) {
-        cls = (this.sortOrder[i].direction == 'asc') ? this.css.ascendingIcon : this.css.descendingIcon
+        cls =
+          this.sortOrder[i].direction == "asc"
+            ? this.css.ascendingIcon
+            : this.css.descendingIcon;
       }
 
       return cls;
     },
 
-    isInCurrentSortGroup (field) {
+    isInCurrentSortGroup(field) {
       return this.currentSortOrderPosition(field) !== false;
     },
 
-    hasSortableIcon (field) {
-      return this.vuetable.isSortable(field) && this.css.sortableIcon != ''
+    hasSortableIcon(field) {
+      return this.vuetable.isSortable(field) && this.css.sortableIcon != "";
     },
 
-    currentSortOrderPosition (field) {
-      if ( ! this.vuetable.isSortable(field)) {
-        return false
+    currentSortOrderPosition(field) {
+      if (!this.vuetable.isSortable(field)) {
+        return false;
       }
 
       for (let i = 0; i < this.sortOrder.length; i++) {
@@ -129,31 +142,47 @@ export default {
       return false;
     },
 
-    fieldIsInSortOrderPosition (field, i) {
-      return this.sortOrder[i].field === field.name && this.sortOrder[i].sortField === field.sortField
+    fieldIsInSortOrderPosition(field, i) {
+      return (
+        this.sortOrder[i].field === field.name &&
+        this.sortOrder[i].sortField === field.sortField
+      );
     },
+    createElement: str => {
+      const el = document.createElement("div");
+      el.innerHTML = str;
+      return el.firstElementChild;
+    },
+    renderTitle(field) {
+      let title = this.getTitle(field);
 
-    renderTitle (field) {
-      let title = this.getTitle(field)
-
-      if (title.length > 0 && this.isInCurrentSortGroup(field) || this.hasSortableIcon(field)) {
-        let style = `opacity:${this.sortIconOpacity(field)};position:relative;float:right`
-        let iconTag = this.vuetable.showSortIcons ? this.renderIconTag(['sort-icon', this.sortIcon(field)], `style="${style}"`) : ''
-        return title + ' ' + iconTag
+      if (
+        (title.length > 0 && this.isInCurrentSortGroup(field)) ||
+        this.hasSortableIcon(field)
+      ) {
+        let style = `opacity:${this.sortIconOpacity(field)};position:relative;`;
+        let iconTag = this.vuetable.showSortIcons
+          ? this.renderIconTag(
+              ["sort-icon", this.sortIcon(field)],
+              `style="${style}"`
+            )
+          : "";
+        const template = `<div><span title="${title}">${title}</span> <span>${iconTag}</span></div`;
+        return template;
       }
 
-      return title
+      return title;
     },
 
-    getTitle (field) {
-      if (typeof(field.title) === 'function') return field.title()
+    getTitle(field) {
+      if (typeof field.title === "function") return field.title();
 
-      return typeof(field.title) === 'undefined'
-        ? field.name.replace('.', ' ')
-        : field.title
+      return typeof field.title === "undefined"
+        ? field.name.replace(".", " ")
+        : field.title;
     },
 
-    sortIconOpacity (field) {
+    sortIconOpacity(field) {
       /*
        * fields with stronger precedence have darker color
        *
@@ -164,31 +193,30 @@ export default {
        * ex. 6 fields are selected: 1.0, 0.86, 0.72, 0.58, 0.44, 0.3
        */
       let max = 1.0,
-          min = 0.3,
-          step = 0.3
+        min = 0.3,
+        step = 0.3;
 
       let count = this.sortOrder.length;
-      let current = this.currentSortOrderPosition(field)
+      let current = this.currentSortOrderPosition(field);
 
-
-      if(max - count * step < min) {
-        step = (max - min) / (count-1)
+      if (max - count * step < min) {
+        step = (max - min) / (count - 1);
       }
 
-      let opacity = max - current * step
+      let opacity = max - current * step;
 
-      return opacity
+      return opacity;
     },
 
-    renderIconTag (classes, options = '') {
-      return typeof(this.css.renderIcon) === 'undefined'
-        ? `<i class="${classes.join(' ')}" ${options}></i>`
-        : this.css.renderIcon(classes, options)
+    renderIconTag(classes, options = "") {
+      return typeof this.css.renderIcon === "undefined"
+        ? `<i class="${classes.join(" ")}" ${options}></i>`
+        : this.css.renderIcon(classes, options);
     },
 
-    onColumnHeaderClicked (field, event) {
-      this.vuetable.orderBy(field, event)
+    onColumnHeaderClicked(field, event) {
+      this.vuetable.orderBy(field, event);
     }
   }
-}
+};
 </script>
