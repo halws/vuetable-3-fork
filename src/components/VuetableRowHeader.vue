@@ -178,7 +178,11 @@
       fieldIsInSortOrderPosition(field, i) {
         return this.sortOrder[i].sortField === field.sortField;
       },
-
+      createElement: (str) => {
+        const el = document.createElement("div");
+        el.innerHTML = str;
+        return el.firstElementChild;
+      },
       renderTitle(field) {
         const title = this.getTitle(field);
 
@@ -196,7 +200,10 @@
                 field
               )
             : "";
-          return title + " " + iconTag;
+
+          const template = `<div><span>${title}</span> <span>${iconTag}</span></div`;
+
+          return this.createElement(template);
         }
 
         return title;
