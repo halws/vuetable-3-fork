@@ -1,16 +1,10 @@
 <template>
   <div :class="$_css.tableWrapper">
-    <div
-      class="vuetable-head-wrapper"
-      v-if="isFixedHeader"
-    >
+    <div class="vuetable-head-wrapper" v-if="isFixedHeader">
       <table :class="['vuetable', $_css.tableClass, $_css.tableHeaderClass]">
         <vuetable-col-group :is-header="true" />
         <thead>
-          <slot
-            name="tableHeader"
-            :fields="tableFields"
-          >
+          <slot name="tableHeader" :fields="tableFields">
             <template v-for="(header, headerIndex) in headerRows">
               <component
                 :is="header"
@@ -59,7 +53,7 @@
           <template v-for="(item, itemIndex) in tableData">
             <tr
               :item-index="itemIndex"
-              :key="itemIndex"
+              :key="`${item[trackBy]}-${itemIndex}`"
               :class="onRowClass(item, itemIndex)"
               @click="onRowClicked(item, itemIndex, $event)"
               @dblclick="onRowDoubleClicked(item, itemIndex, $event)"
@@ -70,7 +64,7 @@
                   <template v-if="isFieldComponent(field.name)">
                     <component
                       :is="field.name"
-                      :key="fieldIndex"
+                      :key="`${item[trackBy]}-${fieldIndex}-component`"
                       :row-data="item"
                       :row-index="itemIndex"
                       :row-field="field"
@@ -83,7 +77,7 @@
                   <template v-else-if="isFieldSlot(field.name)">
                     <td
                       :class="bodyClass('vuetable-slot', field)"
-                      :key="fieldIndex"
+                      :key="`${item[trackBy]}-${fieldIndex}-slot`"
                       :style="{ width: field.width }"
                     >
                       <slot
@@ -97,7 +91,7 @@
                   <template v-else>
                     <td
                       :class="bodyClass('vuetable-td-' + field.name, field)"
-                      :key="fieldIndex"
+                      :key="`${item[trackBy]}-${fieldIndex}`"
                       :style="{ width: field.width }"
                       v-html="renderNormalField(field, item)"
                       @click="onCellClicked(item, itemIndex, field, $event)"
@@ -113,7 +107,10 @@
               </template>
             </tr>
             <template v-if="useDetailRow">
-              <transition :name="detailRowTransition" :key="itemIndex">
+              <transition
+                :name="detailRowTransition"
+                :key="`${item[trackBy]}-${itemIndex}-detail-row`"
+              >
                 <tr
                   v-if="isVisibleDetailRow(item[trackBy])"
                   @click="onDetailRowClick(item, itemIndex, $event)"
@@ -168,52 +165,52 @@
 
     components: {
       VuetableRowHeader,
-      VuetableColGroup,
+      VuetableColGroup
     },
 
     props: {
       fields: {
         type: Array,
-        required: true,
+        required: true
       },
       loadOnStart: {
         type: Boolean,
-        default: true,
+        default: true
       },
       apiUrl: {
         type: String,
-        default: "",
+        default: ""
       },
       httpMethod: {
         type: String,
         default: "get",
-        validator: (value) => {
+        validator: value => {
           return ["get", "post"].indexOf(value) > -1;
-        },
+        }
       },
       reactiveApiUrl: {
         type: Boolean,
-        default: true,
+        default: true
       },
       apiMode: {
         type: Boolean,
-        default: true,
+        default: true
       },
       data: {
         type: [Array, Object],
-        default: null,
+        default: null
       },
       dataManager: {
         type: Function,
-        default: null,
+        default: null
       },
       dataPath: {
         type: String,
-        default: "data",
+        default: "data"
       },
       paginationPath: {
         type: String,
-        default: "links.pagination",
+        default: "links.pagination"
       },
       queryParams: {
         type: [Object, Function],
@@ -221,60 +218,60 @@
           return {
             sort: "sort",
             page: "page",
-            perPage: "per_page",
+            perPage: "per_page"
           };
-        },
+        }
       },
       appendParams: {
         type: Object,
         default() {
           return {};
-        },
+        }
       },
       httpOptions: {
         type: Object,
         default() {
           return {};
-        },
+        }
       },
       httpFetch: {
         type: Function,
-        default: null,
+        default: null
       },
       perPage: {
         type: Number,
-        default: 10,
+        default: 10
       },
       /**
        * Page that should be displayed when the table is first displayed
        */
       initialPage: {
         type: Number,
-        default: 1,
+        default: 1
       },
       /**
        * First page number. Set this prop to 0 for zero based pagination
        */
       firstPage: {
         type: Number,
-        default: 1,
+        default: 1
       },
       sortOrder: {
         type: Array,
         default() {
           return [];
-        },
+        }
       },
       /**
        * @deprecated
        */
       multiSort: {
         type: Boolean,
-        default: false,
+        default: false
       },
       tableHeight: {
         type: String,
-        default: null,
+        default: null
       },
       /*
        * physical key that will trigger multi-sort option
@@ -284,84 +281,84 @@
        */
       multiSortKey: {
         type: String,
-        default: "alt",
+        default: "alt"
       },
       rowClass: {
         type: [String, Function],
-        default: "",
+        default: ""
       },
       detailRowComponent: {
         type: [String, Object],
-        default: "",
+        default: ""
       },
       detailRowTransition: {
         type: String,
-        default: "",
+        default: ""
       },
       detailRowClass: {
         type: [String, Function],
-        default: "vuetable-detail-row",
+        default: "vuetable-detail-row"
       },
       detailRowOptions: {
         type: Object,
         default() {
           return {};
-        },
+        }
       },
       trackBy: {
         type: String,
-        default: "id",
+        default: "id"
       },
       css: {
         type: Object,
         default() {
           return {};
-        },
+        }
       },
       minRows: {
         type: Number,
-        default: 0,
+        default: 0
       },
       silent: {
         type: Boolean,
-        default: false,
+        default: false
       },
       noDataTemplate: {
         type: String,
         default() {
           return "No Data Available";
-        },
+        }
       },
       showSortIcons: {
         type: Boolean,
-        default: true,
+        default: true
       },
       headerRows: {
         type: Array,
         default() {
           return ["VuetableRowHeader"];
-        },
+        }
       },
       transform: {
         type: Function,
-        default: null,
+        default: null
       },
       sortParams: {
         type: Function,
-        default: null,
+        default: null
       },
       fieldPrefix: {
         type: String,
         default() {
           return "vuetable-field-";
-        },
+        }
       },
       eventPrefix: {
         type: String,
         default() {
           return "vuetable:";
-        },
-      },
+        }
+      }
     },
 
     data() {
@@ -375,7 +372,7 @@
         lastScrollPosition: 0,
         scrollBarWidth: "17px", //chrome default
         scrollVisible: false,
-        $_css: {},
+        $_css: {}
       };
     },
 
@@ -397,7 +394,7 @@
         );
       },
       countVisibleFields() {
-        return this.tableFields.filter((field) => {
+        return this.tableFields.filter(field => {
           return field.visible;
         }).length;
       },
@@ -437,7 +434,7 @@
       },
       vuetable() {
         return this;
-      },
+      }
     },
 
     created() {
@@ -500,7 +497,7 @@
 
       perPage() {
         this.reload();
-      },
+      }
     },
 
     methods: {
@@ -573,13 +570,13 @@
           formatter: null,
           visible: true,
           width: null,
-          $_index: index,
+          $_index: index
         };
 
         if (typeof field === "string") {
           return Object.assign({}, defaultField, {
             name: this.normalizeFieldName(field),
-            title: this.makeTitle(field),
+            title: this.makeTitle(field)
           });
         }
 
@@ -678,7 +675,7 @@
       },
 
       titleCase(str) {
-        return str.replace(/\w+/g, (txt) => {
+        return str.replace(/\w+/g, txt => {
           return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
         });
       },
@@ -686,7 +683,7 @@
       camelCase(str, delimiter = "_") {
         return str
           .split(delimiter)
-          .map((item) => self.titleCase(item))
+          .map(item => self.titleCase(item))
           .join("");
       },
 
@@ -708,7 +705,7 @@
         const queryParams = this.getAllQueryParams();
         const allParams = {
           ...this.getAppendParams(queryParams),
-          ...initialParams,
+          ...initialParams
         };
 
         this.httpOptions["params"] = allParams;
@@ -846,12 +843,12 @@
 
       getDefaultSortParam() {
         return this.sortOrder
-          .map((item) => `${item.sortField}|${item.direction}`)
+          .map(item => `${item.sortField}|${item.direction}`)
           .join(",");
       },
 
       getAppendParams(params) {
-        for (let x in this.appendParams) {
+        for (const x in this.appendParams) {
           params[x] = this.appendParams[x];
         }
 
@@ -906,7 +903,7 @@
         this.sortOrder.push({
           field: field.name,
           sortField: field.sortField,
-          direction,
+          direction
         });
       },
 
@@ -978,7 +975,7 @@
         let obj = object;
         if (path.trim() != "") {
           const keys = path.split(".");
-          keys.forEach((key) => {
+          keys.forEach(key => {
             if (
               obj !== null &&
               typeof obj[key] !== "undefined" &&
@@ -1001,7 +998,7 @@
       },
 
       unselectId(key) {
-        this.selectedTo = this.selectedTo.filter((item) => {
+        this.selectedTo = this.selectedTo.filter(item => {
           return item !== key;
         });
       },
@@ -1096,12 +1093,12 @@
           next_page_url: "",
           prev_page_url: "",
           from: (currentPage - 1) * perPage + 1,
-          to: Math.min(currentPage * perPage, total),
+          to: Math.min(currentPage * perPage, total)
         };
       },
 
       normalizeSortOrder() {
-        this.sortOrder.forEach((item) => {
+        this.sortOrder.forEach(item => {
           item.sortField = item.sortField || item.field;
         });
       },
@@ -1133,7 +1130,7 @@
         const result = this.dataManager(this.sortOrder, this.makePagination());
 
         if (this.isPromiseObject(result)) {
-          result.then((data) => this.setData(data));
+          result.then(data => this.setData(data));
         } else {
           this.setData(result);
         }
@@ -1167,7 +1164,7 @@
         this.fireEvent("row-clicked", {
           data: dataItem,
           index: dataIndex,
-          event: event,
+          event: event
         });
         return true;
       },
@@ -1176,7 +1173,7 @@
         this.fireEvent("row-dblclicked", {
           data: dataItem,
           index: dataIndex,
-          event: event,
+          event: event
         });
       },
 
@@ -1184,7 +1181,7 @@
         this.fireEvent("detail-row-clicked", {
           data: dataItem,
           index: dataIndex,
-          event: event,
+          event: event
         });
       },
 
@@ -1193,7 +1190,7 @@
           data: dataItem,
           index: dataIndex,
           field: field,
-          event: event,
+          event: event
         });
       },
 
@@ -1202,7 +1199,7 @@
           data: dataItem,
           index: dataIndex,
           field: field,
-          event: event,
+          event: event
         });
       },
 
@@ -1211,7 +1208,7 @@
           data: dataItem,
           index: dataIndex,
           field: field,
-          event: event,
+          event: event
         });
       },
 
@@ -1219,7 +1216,7 @@
         this.fireEvent("row-mouseover", {
           data: dataItem,
           index: dataIndex,
-          event: event,
+          event: event
         });
       },
 
@@ -1257,11 +1254,11 @@
         const idColumn = this.trackBy;
 
         if (isChecked) {
-          this.tableData.forEach((dataItem) => {
+          this.tableData.forEach(dataItem => {
             this.selectId(dataItem[idColumn]);
           });
         } else {
-          this.tableData.forEach((dataItem) => {
+          this.tableData.forEach(dataItem => {
             this.unselectId(dataItem[idColumn]);
           });
         }
@@ -1295,8 +1292,8 @@
         this.tableData = null;
         this.tablePagination = null;
         this.fireEvent("data-reset");
-      },
-    }, // end: methods
+      }
+    } // end: methods
   };
 </script>
 
