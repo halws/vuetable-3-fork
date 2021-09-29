@@ -7,21 +7,19 @@
     "name": "Manuel Yang"
   },
   "scripts": {
-    "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint",
     "bundle": "vue-cli-service build --target lib --name vuetable-3 src/index.js",
     "dev": "node build/dev-server.js",
+    "lint": "vue-cli-service lint",
     "release": "standard-version",
     "release:minor": "standard-version --release-as minor",
     "release:patch": "standard-version --release-as patch",
+    "serve": "vue-cli-service serve",
     "start": "node build/dev-server.js",
     "storybook:build": "vue-cli-service storybook:build -c config/storybook -o docs/storybook",
     "storybook:serve": "vue-cli-service storybook:serve -p 6006 -c config/storybook",
     "test": "jest",
-    "prebuild": "rimraf ./dist",
-    "prepare": "npm run prebuild && npm run build && npm run bundle && npm run storybook:build"
+    "test:e2e": "vue-cli-service test:e2e"
   },
   "main": "dist/vuetable-3.common.js",
   "dependencies": {
