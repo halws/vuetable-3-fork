@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.0](https://github.com/mannyyang/vuetable-3/compare/v3.3.3...v3.4.0) (2021-09-29)
+
+
+### Features
+
+* update th ([d04b808](https://github.com/mannyyang/vuetable-3/commit/d04b8080545ad0e7f63fd672499c2f33dc75e7a2))
+
 ### [3.3.3](https://github.com/mannyyang/vuetable-3/compare/v3.3.2...v3.3.3) (2021-02-01)
 
 ### [3.3.2](https://github.com/mannyyang/vuetable-3/compare/v3.3.1...v3.3.2) (2021-01-23)
