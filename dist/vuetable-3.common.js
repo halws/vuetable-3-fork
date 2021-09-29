@@ -1,14 +1,5 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else if(typeof exports === 'object')
-		exports["vuetable-3"] = factory();
-	else
-		root["vuetable-3"] = factory();
-})((typeof self !== 'undefined' ? self : this), function() {
-return /******/ (function(modules) { // webpackBootstrap
+module.exports =
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -9565,5 +9556,4 @@ module.exports = NATIVE_SYMBOL
 /***/ })
 
 /******/ });
-});
-//# sourceMappingURL=vuetable-3.umd.js.map
+//# sourceMappingURL=vuetable-3.common.js.map
