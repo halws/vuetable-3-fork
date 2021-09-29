@@ -1,6 +1,6 @@
 {
   "name": "vuetable-3",
-  "version": "3.3.3",
+  "version": "3.4.0",
   "private": false,
   "description": "Datatable component for Vue 2.x",
   "author": {
@@ -19,7 +19,9 @@
     "start": "node build/dev-server.js",
     "storybook:build": "vue-cli-service storybook:build -c config/storybook -o docs/storybook",
     "storybook:serve": "vue-cli-service storybook:serve -p 6006 -c config/storybook",
-    "test": "jest"
+    "test": "jest",
+    "prebuild": "rimraf ./dist",
+    "prepare": "npm run prebuild && npm run build && npm run bundle && npm run storybook:build"
   },
   "main": "dist/vuetable-3.common.js",
   "dependencies": {
